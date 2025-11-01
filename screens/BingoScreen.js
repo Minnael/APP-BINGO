@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, FlatList, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { carregarCartelas } from '../utils/storage';
+import { carregarCartelas, carregarNumerosSorteados, salvarNumerosSorteados, limparNumerosSorteados } from '../utils/storage';
 import { mostrarAlerta, confirmarAcao } from '../utils/alerts';
 import CartelaCard from '../components/CartelaCard';
 
@@ -10,19 +10,26 @@ export default function BingoScreen({ route }) {
   const [numeroInput, setNumeroInput] = useState('');
 
   useEffect(() => {
-    carregarCartelasIniciais();
+    carregarDadosIniciais();
   }, []);
 
-  const carregarCartelasIniciais = async () => {
+  const carregarDadosIniciais = async () => {
+    // Carregar cartelas
     const cartelasCarregadas = await carregarCartelas();
     if (cartelasCarregadas.length > 0) {
       setCartelas(cartelasCarregadas);
     } else if (route.params?.cartelas) {
       setCartelas(route.params.cartelas);
     }
+
+    // Carregar números sorteados
+    const numerosSalvos = await carregarNumerosSorteados();
+    if (numerosSalvos.length > 0) {
+      setNumerosSorteados(numerosSalvos);
+    }
   };
 
-  const adicionarNumero = () => {
+  const adicionarNumero = async () => {
     const numero = parseInt(numeroInput);
     
     if (!numero || numero < 1 || numero > 75) {
@@ -38,6 +45,9 @@ export default function BingoScreen({ route }) {
     const novosNumeros = [...numerosSorteados, numero];
     setNumerosSorteados(novosNumeros);
     setNumeroInput('');
+
+    // Salvar no storage
+    await salvarNumerosSorteados(novosNumeros);
 
     verificarVencedores(novosNumeros);
   };
@@ -60,9 +70,10 @@ export default function BingoScreen({ route }) {
     confirmarAcao(
       'Reiniciar Jogo',
       `Deseja realmente limpar todos os ${numerosSorteados.length} números sorteados e reiniciar o jogo?`,
-      () => {
+      async () => {
         setNumerosSorteados([]);
         setNumeroInput('');
+        await limparNumerosSorteados();
         mostrarAlerta('Sucesso', 'Jogo reiniciado! Boa sorte! 🎲');
       }
     );
@@ -73,7 +84,12 @@ export default function BingoScreen({ route }) {
       'Recarregar Cartelas',
       'Deseja recarregar as cartelas do armazenamento? Os números sorteados serão mantidos.',
       async () => {
-        await carregarCartelasIniciais();
+        const cartelasCarregadas = await carregarCartelas();
+        if (cartelasCarregadas.length > 0) {
+          setCartelas(cartelasCarregadas);
+        } else if (route.params?.cartelas) {
+          setCartelas(route.params.cartelas);
+        }
         mostrarAlerta('Sucesso', 'Cartelas recarregadas!');
       }
     );

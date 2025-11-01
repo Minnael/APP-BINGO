@@ -1,0 +1,18 @@
+{
+  "version": "1.1.0",
+  "androidUrl": "https://expo.dev/accounts/[seu-usuario]/projects/bingo-app/builds/[build-id]",
+  "iosUrl": "https://apps.apple.com/app/bingo-app/id123456789",
+  "message": "Nova versão com funcionalidades incríveis! 🎉",
+  "mandatory": false,
+  "releaseNotes": [
+    "🔄 Sistema de atualização automática",
+    "💾 Números sorteados salvos automaticamente",
+    "🗑️ Exclusão de cartelas com confirmação",
+    "🔄 Botão de reiniciar jogo",
+    "🔄 Botão de recarregar cartelas",
+    "📊 Contador de números sorteados",
+    "🎨 Interface visual melhorada",
+    "� Compatível com Web, Android e iOS",
+    "�🐛 Correções de bugs e melhorias de performance"
+  ]
+}

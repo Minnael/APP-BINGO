@@ -2,7 +2,7 @@
   "expo": {
     "name": "bingo-app",
     "slug": "bingo-app",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,14 +16,29 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.minnael.bingoapp",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": [],
       "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/1e6cd7b7-ff3d-4f69-ab47-9cad9c895c53"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1e6cd7b7-ff3d-4f69-ab47-9cad9c895c53"
+      }
     }
   }
 }
