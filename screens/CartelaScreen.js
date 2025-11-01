@@ -1,69 +1,103 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import { carregarCartelas, adicionarCartela, removerCartela, limparTodasCartelas } from '../utils/storage';
+import { mostrarAlerta, confirmarAcao } from '../utils/alerts';
+import MatrizCartela from '../components/MatrizCartela';
+import ListaCartelas from '../components/ListaCartelas';
 
 export default function CartelaScreen({ navigation }) {
   const [cartelas, setCartelas] = useState([]);
-  const [numeroInput, setNumeroInput] = useState('');
+  const [matriz, setMatriz] = useState(
+    Array.from({ length: 5 }, () => Array(5).fill(''))
+  );
 
-  // Carregar cartelas salvas ao iniciar
   useEffect(() => {
-    (async () => {
-      try {
-        const json = await AsyncStorage.getItem('@cartelas');
-        if (json != null) {
-          setCartelas(JSON.parse(json));
-        }
-      } catch (e) {
-        console.log('Erro ao carregar cartelas', e);
-      }
-    })();
+    carregarCartelasIniciais();
   }, []);
 
-  const salvarCartelas = async (novaLista) => {
-    try {
-      await AsyncStorage.setItem('@cartelas', JSON.stringify(novaLista));
-    } catch (e) {
-      console.log('Erro ao salvar cartelas', e);
-    }
+  const carregarCartelasIniciais = async () => {
+    const cartelasCarregadas = await carregarCartelas();
+    setCartelas(cartelasCarregadas);
   };
 
-  const addCartela = () => {
-    if (numeroInput) {
-      const nova = numeroInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-      if(nova.length > 0){
-        const novaLista = [...cartelas, nova];
-        setCartelas(novaLista);
-        salvarCartelas(novaLista);  // salva no AsyncStorage
-        setNumeroInput('');
-      }
+  const alterarNumero = (row, col, valor) => {
+    setMatriz(prev => {
+      const copia = prev.map(r => [...r]);
+      copia[row][col] = valor;
+      return copia;
+    });
+  };
+
+  const handleAddCartela = async () => {
+    const numeros = matriz.flat().filter((n, i) => !(i === 12)); // exclui centro
+    
+    if (numeros.length < 24 || numeros.some(n => n === '')) {
+      mostrarAlerta('Atenção', 'Complete todos os números da cartela (exceto o centro)!');
+      return;
     }
+
+    const novaLista = await adicionarCartela(numeros.map(n => parseInt(n)));
+    setCartelas(novaLista);
+    setMatriz(Array.from({ length: 5 }, () => Array(5).fill(''))); // reset matriz
+  };
+
+  const handleExcluirCartela = async (index) => {
+    confirmarAcao(
+      'Confirmar Exclusão',
+      `Deseja realmente excluir a Cartela ${index + 1}?`,
+      async () => {
+        const novaLista = await removerCartela(index);
+        setCartelas(novaLista);
+      }
+    );
+  };
+
+  const handleExcluirTodas = async () => {
+    if (cartelas.length === 0) {
+      mostrarAlerta('Atenção', 'Nenhuma cartela para excluir!');
+      return;
+    }
+
+    confirmarAcao(
+      'Confirmar Exclusão',
+      `Deseja realmente excluir todas as ${cartelas.length} cartelas?`,
+      async () => {
+        await limparTodasCartelas();
+        setCartelas([]);
+        mostrarAlerta('Sucesso', 'Todas as cartelas foram excluídas!');
+      }
+    );
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Cadastro de Cartelas</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Digite os números separados por vírgula"
-        value={numeroInput}
-        onChangeText={setNumeroInput}
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Cadastro de Cartela 5x5</Text>
+
+      <MatrizCartela matriz={matriz} onAlterarNumero={alterarNumero} />
+
+      <Button title="Adicionar Cartela" onPress={handleAddCartela} />
+
+      <ListaCartelas 
+        cartelas={cartelas}
+        onExcluir={handleExcluirCartela}
+        onExcluirTodas={handleExcluirTodas}
       />
-      <Button title="Adicionar Cartela" onPress={addCartela} />
-      <FlatList
-        data={cartelas}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <Text>{item.join(', ')}</Text>
-        )}
+
+      <Button 
+        title="Ir para Bingo" 
+        onPress={() => navigation.navigate('Bingo', { cartelas })} 
       />
-      <Button title="Ir para Bingo" onPress={() => navigation.navigate('Bingo', { cartelas })} />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex:1, padding:20 },
-  title: { fontSize:20, marginBottom:10 },
-  input: { borderWidth:1, marginBottom:10, padding:5 }
+  container: { 
+    padding: 20, 
+    alignItems: 'center' 
+  },
+  title: { 
+    fontSize: 20, 
+    marginBottom: 10 
+  }
 });
