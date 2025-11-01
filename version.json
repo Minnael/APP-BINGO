@@ -1,20 +1,21 @@
 {
-  "version": "1.2.0",
-  "androidUrl": "https://expo.dev/accounts/[seu-usuario]/projects/bingo-app/builds/[build-id]",
+  "version": "1.3.1",
+  "androidUrl": "https://expo.dev/accounts/minnael/projects/bingo-app/builds/[build-id]",
   "iosUrl": "https://apps.apple.com/app/bingo-app/id123456789",
-  "message": "Nova versão com visual renovado! �",
+  "message": "Nova versão com ícone atualizado! 🎨",
   "mandatory": false,
   "releaseNotes": [
-    "🎨 Novo nome do app: Bingo!",
-    "🎨 Novo ícone personalizado",
-    "🔄 Sistema de atualização automática",
-    "💾 Números sorteados salvos automaticamente",
-    "🗑️ Exclusão de cartelas com confirmação",
-    "🔄 Botão de reiniciar jogo",
-    "🔄 Botão de recarregar cartelas",
-    "📊 Contador de números sorteados",
-    "� Interface visual melhorada",
+    "🎨 Novo ícone do aplicativo (bingo2.png)",
+    "🚀 Sistema de atualização OTA (Over-The-Air) ativado!",
+    "⚡ Atualizações automáticas sem baixar APK",
+    "� App reinicia automaticamente após atualizar",
+    "🎨 Nome do app: Bingo!",
+    "🎨 Ícone personalizado do app",
+    "� Persistência total de dados",
+    "�️ Gerenciamento completo de cartelas",
+    "📊 Sistema de números sorteados com marcação automática",
+    "🔄 Controles de refresh e reset do jogo",
     "✅ Compatível com Web, Android e iOS",
-    "🐛 Correções de bugs e melhorias de performance"
+    "🐛 Melhorias de performance e estabilidade"
   ]
 }

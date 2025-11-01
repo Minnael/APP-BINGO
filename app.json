@@ -2,9 +2,9 @@
   "expo": {
     "name": "Bingo!",
     "slug": "bingo-app",
-    "version": "1.2.0",
+    "version": "1.3.1",
     "orientation": "portrait",
-    "icon": "./img/bingo.png",
+    "icon": "./img/bingo2.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
@@ -17,9 +17,9 @@
     },
     "android": {
       "package": "com.minnael.bingoapp",
-      "versionCode": 3,
+      "versionCode": 5,
       "adaptiveIcon": {
-        "foregroundImage": "./img/bingo.png",
+        "foregroundImage": "./img/bingo2.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [],
