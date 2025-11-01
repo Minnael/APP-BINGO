@@ -11,7 +11,7 @@ if (Platform.OS !== 'web') {
 }
 
 // Versão atual do app (sincronizada com app.json)
-const VERSAO_ATUAL = '1.1.0';
+const VERSAO_ATUAL = '1.2.0';
 
 // URL onde você hospedará o arquivo de versão (pode ser GitHub, seu servidor, etc.)
 // Por enquanto, vamos simular localmente
